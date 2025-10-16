@@ -1,0 +1,68 @@
+name: Frontend Workflow
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+  
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build Project
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      BUCKET: rushi-s3-static-website
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: dist
+
+      - name: AWS Configure
+        uses: aws-actions/configure-aws-credentials@v5.1.0
+        with:
+          role-to-assume: arn:aws:iam::086227530319:role/tf-role
+          aws-region: us-east-1
+          role-session-name: GitHubActions
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://${{ env.BUCKET }} --delete
+          echo "deployed to S3"

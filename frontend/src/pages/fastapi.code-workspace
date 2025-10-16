@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "../../../fastapi"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}
