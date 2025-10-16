@@ -1,0 +1,28 @@
+name: Backend Workflow
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - 'fastapi/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Zip FastAPI Files
+      run: |
+        cd fastapi
+        zip -r ${{ github.run_id }}.zip application.py database.py models.py requirements.txt Procfile
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fastapi-zip
+        path: fastapi/${{ github.run_id }}.zip
