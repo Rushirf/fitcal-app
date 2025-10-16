@@ -14,6 +14,8 @@ permissions:
 
 env:
     S3_BUCKET: elasticbeanstalk-us-east-1-086227530319
+    APPLICATION_NAME: fitcal
+    APP_ENV: Fitcal-env
 
 jobs:
   build:
@@ -55,5 +57,10 @@ jobs:
       run: |
         aws s3 cp ${{ github.run_id }}.zip s3://${{ env.S3_BUCKET }}/${{ github.run_id }}.zip
 
-    # - name: Deploy to Elastic Beanstalk
-    #   run: |  
+    - name: Create New Application Version
+      run: |  
+        aws elasticbeanstalk create-application-version --application-name ${{ env.APPLICATION_NAME }} --version-label ${{ github.run_id }} --source-bundle S3Bucket=${{ env.S3_BUCKET }},S3Key=${{ github.run_id }}.zip
+
+    - name: Update Elastic Beanstalk Environment
+      run: |
+        aws elasticbeanstalk update-environment --environment-name ${{ env.APP_ENV }} --version-label ${{ github.run_id }}
