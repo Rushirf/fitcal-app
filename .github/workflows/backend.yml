@@ -8,6 +8,13 @@ on:
       - 'fastapi/**'
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  contents: read
+
+env:
+    S3_BUCKET: elasticbeanstalk-us-east-1-086227530319
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,5 +44,16 @@ jobs:
       with:
         name: fastapi-zip
 
-    - name: list files
-      run: ls -R
+    - name: AWS Configure
+      uses: aws-actions/configure-aws-credentials@v5.1.0
+      with:
+        role-to-assume: arn:aws:iam::086227530319:role/tf-role
+        aws-region: us-east-1
+        role-session-name: GitHubActions
+
+    - name: Upload to S3
+      run: |
+        aws s3 cp ${{ github.run_id }}.zip s3://${{ env.S3_BUCKET }}/${{ github.run_id }}.zip
+
+    # - name: Deploy to Elastic Beanstalk
+    #   run: |  
