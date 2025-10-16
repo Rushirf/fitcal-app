@@ -26,3 +26,16 @@ jobs:
       with:
         name: fastapi-zip
         path: fastapi/${{ github.run_id }}.zip
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v5
+      with:
+        name: fastapi-zip
+
+    - name: list files
+      run: ls -R
