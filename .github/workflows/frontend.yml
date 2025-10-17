@@ -66,3 +66,8 @@ jobs:
         run: |
           aws s3 sync . s3://${{ env.BUCKET }} --delete
           echo "deployed to S3"
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
+          echo "CloudFront cache invalidated"

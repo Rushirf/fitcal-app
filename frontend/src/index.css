@@ -20,7 +20,7 @@ a {
   transition: color 0.2s ease;
 }
 a:hover {
-  color: #9aa0ff;
+  color: #a6adff;
 }
 
 body {
@@ -30,7 +30,7 @@ body {
   justify-content: center;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+  background: linear-gradient(135deg, #1c1c1c 0%, #262a3a 100%);
 }
 
 h1 {
@@ -38,26 +38,28 @@ h1 {
   line-height: 1.2;
   text-align: center;
   margin-bottom: 0.5em;
+  letter-spacing: -0.02em;
 }
 
 button {
-  border-radius: 10px;
-  border: 1px solid #333;
-  padding: 0.7em 1.4em;
+  border-radius: 12px;
+  border: 1px solid #3a3a3a;
+  padding: 0.75em 1.6em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #2a2a2a;
+  background-color: #2b2b2b;
   color: #f0f0f0;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 button:hover {
-  border-color: #7c83ff;
-  background-color: #323232;
+  border-color: #8a90ff;
+  background-color: #343447;
   transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(124, 131, 255, 0.25);
 }
 
 button:focus,
@@ -72,22 +74,23 @@ button:focus-visible {
     background-color: #fefefe;
   }
   body {
-    background: linear-gradient(135deg, #ffffff, #f5f5f5);
+    background: linear-gradient(135deg, #ffffff, #eef0ff);
   }
   a {
     color: #5b63ff;
   }
   a:hover {
-    color: #3238ff;
+    color: #2b32ff;
   }
   button {
-    background-color: #f5f5f5;
+    background-color: #f7f7ff;
     color: #222;
     border-color: #ddd;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
   }
   button:hover {
     background-color: #ececff;
     border-color: #5b63ff;
+    box-shadow: 0 5px 10px rgba(91, 99, 255, 0.15);
   }
 }
-
