@@ -45,8 +45,8 @@ jobs:
           name: tfplan
           github-token: ${{ env.GH_PAT }}
           run-id: ${{ github.event.workflow_run.id }}
-          repository: Rushirf/user-app
+          repository: Rushirf/fitcal-app
 
 
       - name: Apply Terraform plan
-        run: echo "hello"
+        run: terraform apply -auto-approve
