@@ -338,4 +338,20 @@ cloudfront = {
     acm_certificate_arn            = "arn:aws:acm:us-east-1:086227530319:certificate/65f6c3f7-b2be-4d30-90aa-f8f8932cae73"
     ssl_support_method             = "sni-only"
   }
+
+  custom_error_response = [ {
+    error_code            = "403"
+    response_code         = "200"
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = "0"
+    },
+    {
+    error_code            = "404"
+    response_code         = "200"
+    response_page_path    = "/index.html"
+    error_caching_min_ttl = "0"
+    }
+  ]
+
+
 }
