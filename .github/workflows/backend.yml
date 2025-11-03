@@ -14,8 +14,8 @@ permissions:
 
 env:
     S3_BUCKET: elasticbeanstalk-us-east-1-086227530319
-    APPLICATION_NAME: fitcal
-    APP_ENV: Fitcal-env
+    APPLICATION_NAME: fitcal-app
+    APP_ENV: fitcal-app-env
 
 jobs:
   build:

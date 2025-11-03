@@ -47,7 +47,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      BUCKET: rushi-s3-static-website
+      BUCKET: fitcal-s3-frontend-bucket
 
     steps:
       - name: Download Artifact
