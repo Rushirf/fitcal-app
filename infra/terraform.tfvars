@@ -245,7 +245,7 @@ beanstalk = {
       {
         namespace = "aws:elasticbeanstalk:application:environment"
         name      = "WHITE_URL"
-        value     = "https://fitcal-app.hitmann.xyz"
+        value     = "https://myfitcal.hitmann.xyz"
       },
     ]
 
