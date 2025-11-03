@@ -1,48 +1,38 @@
-# from sqlalchemy import create_engine
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import sessionmaker
-# import os
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
-# DB_USER = os.getenv("DB_USER")
-# DB_PASSWORD = os.getenv("DB_PASSWORD")
-# DB_HOST = os.getenv("DB_HOST")
-# DB_NAME = os.getenv("DB_NAME")
-
-# # SQLAlchemy connection string
-# DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
-
-# engine = create_engine(DATABASE_URL)
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# Base = declarative_base()
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os, time
-from dotenv import load_dotenv
 from sqlalchemy.exc import OperationalError
+from urllib.parse import quote_plus
+import boto3, json, os, time
 
-load_dotenv()
-
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
+# --- Get DB config ---
+DB_SECRET_ARN = os.getenv("DB_SECRET_ARN")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 
+# --- Fetch secret from AWS Secrets Manager ---
+def get_secret():
+    client = boto3.client("secretsmanager", region_name="us-east-1")
+    response = client.get_secret_value(SecretId=DB_SECRET_ARN)
+    secret = json.loads(response["SecretString"])
+    return secret["username"], secret["password"]
+
+DB_USER, DB_PASSWORD = get_secret()
+
+# --- URL encode password in case of special chars ---
+DB_PASSWORD = quote_plus(DB_PASSWORD)
+
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
 
-# --- NEW: add connection pool safety and retry logic ---
+# --- Create engine with retries ---
 for attempt in range(5):
     try:
         engine = create_engine(
             DATABASE_URL,
-            pool_pre_ping=True,     # ✅ Detect and reconnect dropped connections
-            pool_recycle=280,       # ✅ Refresh stale connections before RDS timeout (300s default)
-            pool_size=5,            # ✅ Reasonable for EB
-            max_overflow=10,        # ✅ Allow bursts
+            pool_pre_ping=True,
+            pool_recycle=280,
+            pool_size=5,
+            max_overflow=10,
         )
         with engine.connect() as conn:
             print("✅ Database connection successful")

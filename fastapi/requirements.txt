@@ -4,3 +4,4 @@ SQLAlchemy
 PyMySQL
 python-dotenv
 cryptography
+boto3
